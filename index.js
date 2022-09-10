@@ -1,67 +1,63 @@
 import inquirer from "inquirer";
+import { Warrior } from "./Warrior.js";
 
-function Warrior(name, type, defense, hitpoints, basicAttack, heavyAttack) {
-  this.name = name;
-  this.type = type;
-  this.defense = defense;
-  this.hitpoints = hitpoints;
-  this.basicAttack = basicAttack;
-  this.heavyAttack = heavyAttack;
-  this.guarding = false;
-}
-
-Warrior.prototype.statSheet = function () {
-  console.log(
-    `Name: ${this.name}\nType: ${this.type}\nDefense: ${this.defense}\nHitPoints: ${this.hitpoints}\nBasic Attack: ${this.basicAttack}\nHeavy Attack: ${this.heavyAttack}`
-  );
-  console.log("\n-------------\n");
-};
-
-Warrior.prototype.attack = function (character2, damage) {
-  if (character2.guarding === false) {
-    console.log(
-      `${this.name} attacks ${character2.name} for ${damage} points of damage!\n`
-    );
-    character2.hitpoints -= damage;
-  } else {
-    console.log(
-      `${this.name} attacks ${
-        character2.name
-      } for ${damage} points of damage!\nHowever, ${
-        character2.name
-      } guards against the attack!\nThe damage was reduced to ${
-        damage - character2.defense
-      }\n`
-    );
-    character2.guarding === false;
-    character2.hitpoints -= damage - character2.defense;
-  }
-  if (character2.isAlive()) {
-    console.log(
-      `${character2.name} has ${character2.hitpoints} health remaining!\n`
-    );
-  } else {
-    console.log(
-      `That attack killed ${character2.name}! Game Over!\n${this.name} is the victor!\n`
-    );
-  }
-};
-
-Warrior.prototype.guard = function () {
-  this.guarding = true;
-  console.log(`${this.name} is now guarding!\n`);
-};
-
-Warrior.prototype.isAlive = function () {
-  if (this.hitpoints > 0) {
-    return true;
-  }
-  return false;
-};
-
-const berserker = new Warrior("Guts", "Berserker", 20, 100, 20, 45);
+const berserker = new Warrior("Guts", "Berserker", 20, 100, 20, 65);
 
 const merc = new Warrior("Vincent", "Merc", 25, 70, 30, 40);
+
+const vagabond = new Warrior("Musashi", "Vagabond", 40, 60, 15, 55);
+
+const gunslinger = new Warrior("Clint", "Gunslinger", 10, 75, 20, 60);
+
+const roster = [berserker, merc, vagabond, gunslinger];
+
+const viewRoster = () => {
+  for (let i = 0; i < roster.length; i++) {
+    roster[i].statSheet();
+  }
+  mainmenu();
+};
+
+const singlePlayer = () => {};
+
+const twoPlayer = () => {};
+
+async function rules() {
+  await console.log("These are the rules for Warriors Of Wrath");
+  await setTimeout(function () {
+    console.log(
+      "Before the fight begins you must select single-player or two-player."
+    );
+  }, 1000);
+  await setTimeout(function () {
+    console.log(
+      "If you select single-player, you may choose your fighter and opponent\nTwo-player allows the same thing but will allow the opponent to be controlled by a second player using the same keyboard.\n"
+    );
+  }, 3000);
+  await setTimeout(function () {
+    console.log(
+      "During the fight you will be presented with the option to do an Basic or Heavy Attack, as well as to Guard or 'Total Guard'.\n"
+    );
+  }, 5000);
+  await setTimeout(function () {
+    console.log(
+      "A Basic Attack will do lesser damage than a Heavy Attack.\nTry to use this to try to mindgame your opponent and use a Heavy Attack when they aren't ready to defend themselves while using Basic Attacks for the attack they defend against.\n"
+    );
+  }, 8000);
+  await setTimeout(function () {
+    console.log(
+      "You can also Guard and Total Guard.\nUsing Guard will make your fighter defend themselves. Reducing the damage taken from an attack by your defense.\nEvery fighter has different defense so be sure to view the roster and check them.\n"
+    );
+  }, 12000);
+  await setTimeout(function () {
+    console.log(
+      "A Total Guard will make your fighter use everything they have to defend themselves, making it so damage is taken regardless of the attack used against you and can only be used once per battle.\nMake sure to use your Total Guard when you feel your opponent is going to use a Heavy Attack to get the most use out of it!\n"
+    );
+  }, 16000);
+  await setTimeout(function () {
+    mainmenu();
+  }, 200000);
+}
 
 const mainmenu = () => {
   inquirer
@@ -88,10 +84,10 @@ const mainmenu = () => {
           berserker.statSheet();
           break;
         case "View Roster":
-          berserker.statSheet();
+          viewRoster();
           break;
         case "Rules":
-          berserker.statSheet();
+          rules();
           break;
         case "Quit":
           process.exit();
@@ -105,3 +101,10 @@ const mainmenu = () => {
 };
 
 mainmenu();
+
+// berserker.statSheet();
+// merc.statSheet();
+// merc.totalGuard();
+// berserker.attack(merc, berserker.heavyAttack);
+// merc.totalGuard();
+// berserker.nextMove(merc);
