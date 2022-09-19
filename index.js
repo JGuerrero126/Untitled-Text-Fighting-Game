@@ -50,9 +50,76 @@ const singlePlayer = () => {
           });
           console.log(`\nYou selected ${P1.name} as your Warrior\n`);
           console.log(`${P2.name} is your opponent!\n`);
+          console.log(`\n${P1.name} VS ${P2.name}\n`);
+          console.log(`Battle Start!`);
+          battle(P1, P2);
         });
     });
 };
+
+async function battle(P1, P2) {
+  // let p1CurrentMove = null;
+  let p2PastMove = null;
+  // let p2CurrentMove = null;
+  do {
+    await inquirer
+      .prompt([
+        {
+          type: "list",
+          message: "Your Move! What do you wanna do?",
+          name: "p1move",
+          choices: ["Guard", "Total Guard", "Basic Attack", "Heavy Attack"],
+        },
+      ])
+      .then((choice) => {
+        var p2CurrentMove = P2.nextMove(P1);
+        if (choice.p1move === "Guard" || choice.p1move === "Total Guard") {
+          if (choice.p1move === "Guard") {
+            var p1CurrentMove = P1.guard();
+          }
+          if (choice.p1move === "Total Guard") {
+            var p1CurrentMove = P1.totalGuard();
+          }
+        }
+        if (
+          choice.p1move === "Basic Attack" ||
+          choice.p1move === "Heavy Attack"
+        ) {
+          if (choice.p1move === "Basic Attack") {
+            var p1CurrentMove = P1.attack(P2, P1.basicAttack);
+          }
+          if (choice.p1move === "Heavy Attack") {
+            var p1CurrentMove = P1.attack(P2, P1.heavyAttack);
+          }
+        }
+        // var p2CurrentMove = P2.nextMove(P1);
+        // if (p2PastMove === p2CurrentMove) {
+        //   p2CurrentMove = P2.nextMove(P1);
+        // }
+        // if (
+        //   (p1CurrentMove === P1.guard() || p1CurrentMove === P1.totalGuard()) &&
+        //   (p2CurrentMove === P2.guard() || p2CurrentMove === P2.totalGuard())
+        // ) {
+        //   console.log(
+        //     "Both Warriors Attempted To Guard! The Battle is at a standstill!"
+        //   );
+        // }
+        // if (
+        //   (p1CurrentMove === P1.attack(P2, P1.basicAttack) ||
+        //     p1CurrentMove === P1.attack(P2, P1.heavyAttack)) &&
+        //   (p2CurrentMove === P2.guard() || p2CurrentMove === P2.totalGuard())
+        // ) {
+        //   p2CurrentMove;
+        //   p1CurrentMove;
+        // } else {
+        p1CurrentMove;
+        if (P2.isAlive() === true) {
+          p2CurrentMove;
+        }
+        // }
+      });
+  } while (P1.isAlive() && P2.isAlive());
+}
 
 const twoPlayer = () => {
   inquirer
@@ -100,6 +167,11 @@ const twoPlayer = () => {
     });
 };
 
+const testMove = (warrior) => {
+  var testing = warrior.totalGuard();
+  testing;
+};
+
 const mainmenu = () => {
   inquirer
     .prompt([
@@ -120,6 +192,7 @@ const mainmenu = () => {
       switch (choice.menuchoice) {
         case "Single-Player":
           singlePlayer();
+          // testMove(berserker);
           break;
         case "Two-Player":
           twoPlayer();
