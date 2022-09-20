@@ -90,7 +90,7 @@ Warrior.prototype.isAlive = function () {
 
 Warrior.prototype.nextMove = function (character2) {
   const move = Math.floor(Math.random() * 21);
-  console.log(move);
+  // console.log(move);
   if (move <= 4) {
     return this.guard();
   }

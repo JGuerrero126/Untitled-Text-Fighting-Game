@@ -58,9 +58,9 @@ const singlePlayer = () => {
 };
 
 async function battle(P1, P2) {
-  // let p1CurrentMove = null;
-  let p2PastMove = null;
-  // let p2CurrentMove = null;
+  let p1CurrentMove = null;
+  // let p2PastMove = null;
+  let p2CurrentMove = null;
   do {
     await inquirer
       .prompt([
@@ -72,13 +72,15 @@ async function battle(P1, P2) {
         },
       ])
       .then((choice) => {
-        var p2CurrentMove = P2.nextMove(P1);
+        // p2CurrentMove = P2.nextMove;
         if (choice.p1move === "Guard" || choice.p1move === "Total Guard") {
           if (choice.p1move === "Guard") {
-            var p1CurrentMove = P1.guard();
+            // p1CurrentMove = P1.guard();
+            P1.guard();
           }
           if (choice.p1move === "Total Guard") {
-            var p1CurrentMove = P1.totalGuard();
+            // p1CurrentMove = P1.totalGuard();
+            P1.totalGuard();
           }
         }
         if (
@@ -86,10 +88,12 @@ async function battle(P1, P2) {
           choice.p1move === "Heavy Attack"
         ) {
           if (choice.p1move === "Basic Attack") {
-            var p1CurrentMove = P1.attack(P2, P1.basicAttack);
+            // p1CurrentMove = P1.attack(P2, P1.basicAttack);
+            P1.attack(P2, P1.basicAttack);
           }
           if (choice.p1move === "Heavy Attack") {
-            var p1CurrentMove = P1.attack(P2, P1.heavyAttack);
+            // p1CurrentMove = P1.attack(P2, P1.heavyAttack);
+            P1.attack(P2, P1.heavyAttack);
           }
         }
         // var p2CurrentMove = P2.nextMove(P1);
@@ -112,9 +116,10 @@ async function battle(P1, P2) {
         //   p2CurrentMove;
         //   p1CurrentMove;
         // } else {
-        p1CurrentMove;
+        // p1CurrentMove();
         if (P2.isAlive() === true) {
-          p2CurrentMove;
+          // p2CurrentMove();
+          P2.nextMove(P1);
         }
         // }
       });
