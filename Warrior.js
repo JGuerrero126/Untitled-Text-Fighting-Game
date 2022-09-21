@@ -27,17 +27,24 @@ Warrior.prototype.statSheet = function () {
 Warrior.prototype.attack = function (character2, damage) {
   if (character2.guarding === true || character2.perfectGuard === true) {
     if (character2.guarding === true) {
-      console.log(
-        `${this.name} attacks ${
-          character2.name
-        } for ${damage} points of damage!\nHowever, ${
-          character2.name
-        } guards against the attack!\nThe damage was reduced to ${
-          damage - character2.defense
-        }\n`
-      );
-      character2.guarding === false;
-      character2.hitpoints -= damage - character2.defense;
+      if (damage - character2.defense > 0) {
+        console.log(
+          `${this.name} attacks ${
+            character2.name
+          } for ${damage} points of damage!\nHowever, ${
+            character2.name
+          } guards against the attack!\nThe damage was reduced to ${
+            damage - character2.defense
+          }\n`
+        );
+        character2.guarding = false;
+        character2.hitpoints -= damage - character2.defense;
+      } else {
+        console.log(
+          `${this.name} attacks ${character2.name} for ${damage} points of damage!\nHowever, ${character2.name} defenses were so strong all damage was negated!\n`
+        );
+        character2.guarding = false;
+      }
     }
     if (character2.perfectGuard === true) {
       console.log(
@@ -88,8 +95,8 @@ Warrior.prototype.isAlive = function () {
   return false;
 };
 
-Warrior.prototype.nextMove = function (character2) {
-  const move = Math.floor(Math.random() * 21);
+Warrior.prototype.nextMove = function (character2, move) {
+  // const move = Math.floor(Math.random() * 21);
   // console.log(move);
   if (move <= 4) {
     return this.guard();

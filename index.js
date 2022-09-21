@@ -57,73 +57,77 @@ const singlePlayer = () => {
     });
 };
 
-async function battle(P1, P2) {
-  let p1CurrentMove = null;
-  // let p2PastMove = null;
-  let p2CurrentMove = null;
-  do {
-    await inquirer
+async function battle(P1, P2, num) {
+  let p1Move = null;
+  let p2Move = null;
+  await inquirer
+    .prompt([
+      {
+        type: "list",
+        message: "Your Move! What do you wanna do?",
+        name: "p1move",
+        choices: ["Guard", "Total Guard", "Basic Attack", "Heavy Attack"],
+      },
+    ])
+    .then((choice) => {
+      p2Move = Math.floor(Math.random() * 21);
+      if (p2Move <= 8) {
+        P2.nextMove(P1, p2Move);
+      }
+      if (choice.p1move === "Guard" || choice.p1move === "Total Guard") {
+        if (choice.p1move === "Guard") {
+          P1.guard();
+        }
+        if (choice.p1move === "Total Guard") {
+          P1.totalGuard();
+        }
+      }
+      if (
+        choice.p1move === "Basic Attack" ||
+        choice.p1move === "Heavy Attack"
+      ) {
+        if (choice.p1move === "Basic Attack") {
+          P1.attack(P2, P1.basicAttack);
+        }
+        if (choice.p1move === "Heavy Attack") {
+          P1.attack(P2, P1.heavyAttack);
+        }
+      }
+
+      if (P2.isAlive() === true && p2Move > 8) {
+        P2.nextMove(P1, p2Move);
+      }
+    });
+  if (P1.isAlive() && P2.isAlive()) {
+    battle(P1, P2);
+  } else {
+    reset();
+    console.log("\nThe battle is over!\n");
+    inquirer
       .prompt([
         {
           type: "list",
-          message: "Your Move! What do you wanna do?",
-          name: "p1move",
-          choices: ["Guard", "Total Guard", "Basic Attack", "Heavy Attack"],
+          name: "menuchoice",
+          message: "What would you like to do now!",
+          choices: ["Rematch", "Main Menu"],
         },
       ])
       .then((choice) => {
-        // p2CurrentMove = P2.nextMove;
-        if (choice.p1move === "Guard" || choice.p1move === "Total Guard") {
-          if (choice.p1move === "Guard") {
-            // p1CurrentMove = P1.guard();
-            P1.guard();
-          }
-          if (choice.p1move === "Total Guard") {
-            // p1CurrentMove = P1.totalGuard();
-            P1.totalGuard();
-          }
+        switch (choice.menuchoice) {
+          case "Rematch":
+            battle(P1, P2);
+            break;
+          case "Main Menu":
+            mainmenu();
+            break;
+          default:
+            console.log(
+              "I'm sorry I didn't understand your choice, please start over."
+            );
+            mainmenu();
         }
-        if (
-          choice.p1move === "Basic Attack" ||
-          choice.p1move === "Heavy Attack"
-        ) {
-          if (choice.p1move === "Basic Attack") {
-            // p1CurrentMove = P1.attack(P2, P1.basicAttack);
-            P1.attack(P2, P1.basicAttack);
-          }
-          if (choice.p1move === "Heavy Attack") {
-            // p1CurrentMove = P1.attack(P2, P1.heavyAttack);
-            P1.attack(P2, P1.heavyAttack);
-          }
-        }
-        // var p2CurrentMove = P2.nextMove(P1);
-        // if (p2PastMove === p2CurrentMove) {
-        //   p2CurrentMove = P2.nextMove(P1);
-        // }
-        // if (
-        //   (p1CurrentMove === P1.guard() || p1CurrentMove === P1.totalGuard()) &&
-        //   (p2CurrentMove === P2.guard() || p2CurrentMove === P2.totalGuard())
-        // ) {
-        //   console.log(
-        //     "Both Warriors Attempted To Guard! The Battle is at a standstill!"
-        //   );
-        // }
-        // if (
-        //   (p1CurrentMove === P1.attack(P2, P1.basicAttack) ||
-        //     p1CurrentMove === P1.attack(P2, P1.heavyAttack)) &&
-        //   (p2CurrentMove === P2.guard() || p2CurrentMove === P2.totalGuard())
-        // ) {
-        //   p2CurrentMove;
-        //   p1CurrentMove;
-        // } else {
-        // p1CurrentMove();
-        if (P2.isAlive() === true) {
-          // p2CurrentMove();
-          P2.nextMove(P1);
-        }
-        // }
       });
-  } while (P1.isAlive() && P2.isAlive());
+  }
 }
 
 const twoPlayer = () => {
@@ -175,6 +179,26 @@ const twoPlayer = () => {
 const testMove = (warrior) => {
   var testing = warrior.totalGuard();
   testing;
+};
+
+const reset = () => {
+  roster.forEach((element) => {
+    if (element.remainingPG === 0) {
+      element.remainingPG = 1;
+    }
+    if (element.name === "Guts") {
+      element.hitpoints = 100;
+    }
+    if (element.name === "Vincent") {
+      element.hitpoints = 70;
+    }
+    if (element.name === "Musashi") {
+      element.hitpoints = 60;
+    }
+    if (element.name === "Clint") {
+      element.hitpoints = 75;
+    }
+  });
 };
 
 const mainmenu = () => {
