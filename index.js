@@ -57,80 +57,211 @@ const singlePlayer = () => {
     });
 };
 
-async function battle(P1, P2, num) {
-  let p1Move = null;
-  let p2Move = null;
-  await inquirer
-    .prompt([
-      {
-        type: "list",
-        message: "Your Move! What do you wanna do?",
-        name: "p1move",
-        choices: ["Guard", "Total Guard", "Basic Attack", "Heavy Attack"],
-      },
-    ])
-    .then((choice) => {
-      p2Move = Math.floor(Math.random() * 21);
-      if (p2Move <= 8) {
-        P2.nextMove(P1, p2Move);
-      }
-      if (choice.p1move === "Guard" || choice.p1move === "Total Guard") {
-        if (choice.p1move === "Guard") {
-          P1.guard();
-        }
-        if (choice.p1move === "Total Guard") {
-          P1.totalGuard();
-        }
-      }
-      if (
-        choice.p1move === "Basic Attack" ||
-        choice.p1move === "Heavy Attack"
-      ) {
-        if (choice.p1move === "Basic Attack") {
-          P1.attack(P2, P1.basicAttack);
-        }
-        if (choice.p1move === "Heavy Attack") {
-          P1.attack(P2, P1.heavyAttack);
-        }
-      }
-
-      if (P2.isAlive() === true && p2Move > 8) {
-        P2.nextMove(P1, p2Move);
-      }
-    });
-  if (P1.isAlive() && P2.isAlive()) {
-    battle(P1, P2);
-  } else {
-    reset();
-    console.log("\nThe battle is over!\n");
-    inquirer
+async function battle(P1, P2, playerNum) {
+  if (playerNum === 1) {
+    let p1Move = null;
+    let p2Move = null;
+    await inquirer
       .prompt([
         {
           type: "list",
-          name: "menuchoice",
-          message: "What would you like to do now!",
-          choices: ["Rematch", "Main Menu"],
+          message: "Your Move! What do you wanna do?",
+          name: "p1move",
+          choices: ["Guard", "Total Guard", "Basic Attack", "Heavy Attack"],
         },
       ])
       .then((choice) => {
-        switch (choice.menuchoice) {
-          case "Rematch":
-            battle(P1, P2);
-            break;
-          case "Main Menu":
-            mainmenu();
-            break;
-          default:
-            console.log(
-              "I'm sorry I didn't understand your choice, please start over."
-            );
-            mainmenu();
+        p2Move = Math.floor(Math.random() * 21);
+        if (p2Move <= 8) {
+          P2.nextMove(P1, p2Move);
+        }
+        if (choice.p1move === "Guard" || choice.p1move === "Total Guard") {
+          if (choice.p1move === "Guard") {
+            P1.guard();
+          }
+          if (choice.p1move === "Total Guard") {
+            P1.totalGuard();
+          }
+        }
+        if (
+          choice.p1move === "Basic Attack" ||
+          choice.p1move === "Heavy Attack"
+        ) {
+          if (choice.p1move === "Basic Attack") {
+            P1.attack(P2, P1.basicAttack);
+          }
+          if (choice.p1move === "Heavy Attack") {
+            P1.attack(P2, P1.heavyAttack);
+          }
+        }
+
+        if (P2.isAlive() === true && p2Move > 8) {
+          P2.nextMove(P1, p2Move);
         }
       });
+    if (P1.isAlive() && P2.isAlive()) {
+      battle(P1, P2, 1);
+    } else {
+      reset();
+      console.log("\nThe battle is over!\n");
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "menuchoice",
+            message: "What would you like to do now!",
+            choices: ["Rematch", "Main Menu"],
+          },
+        ])
+        .then((choice) => {
+          switch (choice.menuchoice) {
+            case "Rematch":
+              battle(P1, P2, 1);
+              break;
+            case "Main Menu":
+              mainmenu();
+              break;
+            default:
+              console.log(
+                "I'm sorry I didn't understand your choice, please start over."
+              );
+              mainmenu();
+          }
+        });
+    }
+  }
+  if (playerNum === 2) {
+    await inquirer
+      .prompt([
+        {
+          type: "list",
+          message: "Player One! Your Move! What do you wanna do?",
+          name: "playerOneMove",
+          choices: ["Guard", "Total Guard", "Basic Attack", "Heavy Attack"],
+        },
+      ])
+      .then(async (firstChoice) => {
+        await inquirer
+          .prompt([
+            {
+              type: "list",
+              message: "Player Two! You're Up! What do you wanna do?",
+              name: "playerTwoMove",
+              choices: ["Guard", "Total Guard", "Basic Attack", "Heavy Attack"],
+            },
+          ])
+          .then((secondChoice) => {
+            if (
+              (firstChoice.playerOneMove === "Guard" ||
+                firstChoice.playerOneMove === "Total Guard") &&
+              (secondChoice.playerTwoMove === "Guard" ||
+                secondChoice.playerTwoMove === "Total Guard")
+            ) {
+              console.log(
+                `${P1.name} and ${P2.name} both guard, the battle is at a standstill!`
+              );
+            } else if (
+              (firstChoice.playerOneMove === "Basic Attack" ||
+                firstChoice.playerOneMove === "Heavy Attack") &&
+              (secondChoice.playerTwoMove === "Guard" ||
+                secondChoice.playerTwoMove === "Total Guard")
+            ) {
+              if (secondChoice.playerTwoMove === "Guard") {
+                P2.guard();
+              }
+              if (secondChoice.playerTwoMove === "Total Guard") {
+                P2.totalGuard();
+              }
+              if (firstChoice.playerOneMove === "Basic Attack") {
+                P1.attack(P2, P1.basicAttack);
+              }
+              if (firstChoice.playerOneMove === "Heavy Attack") {
+                P1.attack(P2, P1.heavyAttack);
+              }
+            } else {
+              if (
+                firstChoice.playerOneMove === "Guard" ||
+                firstChoice.playerOneMove === "Total Guard"
+              ) {
+                if (firstChoice.playerOneMove === "Guard") {
+                  P1.guard();
+                }
+                if (firstChoice.playerOneMove === "Total Guard") {
+                  P1.totalGuard();
+                }
+              }
+              if (
+                firstChoice.playerOneMove === "Basic Attack" ||
+                firstChoice.playerOneMove === "Heavy Attack"
+              ) {
+                if (firstChoice.playerOneMove === "Basic Attack") {
+                  P1.attack(P2, P1.basicAttack);
+                }
+                if (firstChoice.playerOneMove === "Heavy Attack") {
+                  P1.attack(P2, P1.heavyAttack);
+                }
+              }
+              if (P2.isAlive()) {
+                if (
+                  secondChoice.playerTwoMove === "Guard" ||
+                  secondChoice.playerTwoMove === "Total Guard"
+                ) {
+                  if (secondChoice.playerTwoMove === "Guard") {
+                    P2.guard();
+                  }
+                  if (secondChoice.playerTwoMove === "Total Guard") {
+                    P2.totalGuard();
+                  }
+                }
+                if (
+                  secondChoice.playerTwoMove === "Basic Attack" ||
+                  secondChoice.playerTwoMove === "Heavy Attack"
+                ) {
+                  if (secondChoice.playerTwoMove === "Basic Attack") {
+                    P2.attack(P1, P2.basicAttack);
+                  }
+                  if (secondChoice.playerTwoMove === "Heavy Attack") {
+                    P2.attack(P1, P2.heavyAttack);
+                  }
+                }
+              }
+            }
+          });
+      });
+    if (P1.isAlive() && P2.isAlive()) {
+      battle(P1, P2, 2);
+    } else {
+      reset();
+      console.log("\nThe battle is over!\n");
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "menuchoice",
+            message: "What would you like to do now!",
+            choices: ["Rematch", "Main Menu"],
+          },
+        ])
+        .then((choice) => {
+          switch (choice.menuchoice) {
+            case "Rematch":
+              battle(P1, P2, 1);
+              break;
+            case "Main Menu":
+              mainmenu();
+              break;
+            default:
+              console.log(
+                "I'm sorry I didn't understand your choice, please start over."
+              );
+              mainmenu();
+          }
+        });
+    }
   }
 }
 
-const twoPlayer = () => {
+function twoPlayer() {
   inquirer
     .prompt([
       {
@@ -172,9 +303,10 @@ const twoPlayer = () => {
             `\nPlayer One has selected ${P1.name} as their Warrior!\n`
           );
           console.log(`Player Two selected ${P2.name} as their Warrior!\n`);
+          battle(P1, P2, 2);
         });
     });
-};
+}
 
 const testMove = (warrior) => {
   var testing = warrior.totalGuard();
@@ -243,5 +375,7 @@ const mainmenu = () => {
       }
     });
 };
+
+export default mainmenu;
 
 mainmenu();

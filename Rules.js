@@ -1,8 +1,10 @@
+import mainmenu from "./index.js";
+
 export async function rules() {
   await console.log("These are the rules for Warriors Of Wrath");
   await setTimeout(function () {
     console.log(
-      "Before the fight begins you must select single-player or two-player."
+      "Before the fight begins you must select single-player or two-player.\n"
     );
   }, 1000);
   await setTimeout(function () {
@@ -32,5 +34,5 @@ export async function rules() {
   }, 16000);
   await setTimeout(function () {
     mainmenu();
-  }, 200000);
+  }, 20000);
 }
