@@ -1,6 +1,27 @@
 {
+  "name": "warriors-of-wrath",
+  "version": "1.0.0",
+  "description": "Warriors Of Wrath is a text-based fighting game where you can fight against a computer in single-player or someone else at your computer in local two-player.",
+  "author": "Jerry 'JJ' Guerrero jerrygdev126@gmail.com (https://a-probable-reaction.vercel.app)",
   "type": "module",
   "dependencies": {
     "inquirer": "^9.1.1"
-  }
+  },
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JGuerrero126/Untitled-Text-Fighting-Game.git"
+  },
+  "keywords": [
+    "Fighting"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JGuerrero126/Untitled-Text-Fighting-Game/issues"
+  },
+  "homepage": "https://github.com/JGuerrero126/Untitled-Text-Fighting-Game#readme"
 }

@@ -1,11 +1,12 @@
 import inquirer from "inquirer";
-import { Warrior } from "./Warrior.js";
-import { rules } from "./Rules.js";
-import { viewRoster } from "./ViewRoster.js";
+import { Warrior } from "./util_files/Warrior.js";
+import { rules } from "./util_files/Rules.js";
+import { viewRoster } from "./util_files/ViewRoster.js";
+import { reset } from "./util_files/Reset.js";
 
 const berserker = new Warrior("Guts", "Berserker", 20, 100, 20, 65);
 
-const merc = new Warrior("Vincent", "Merc", 25, 70, 30, 40);
+const merc = new Warrior("Vincent", "Merc", 25, 70, 30, 55);
 
 const vagabond = new Warrior("Musashi", "Vagabond", 40, 60, 15, 55);
 
@@ -52,7 +53,54 @@ const singlePlayer = () => {
           console.log(`${P2.name} is your opponent!\n`);
           console.log(`\n${P1.name} VS ${P2.name}\n`);
           console.log(`Battle Start!`);
-          battle(P1, P2);
+          battle(P1, P2, 1);
+        });
+    });
+};
+
+const twoPlayer = () => {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "P1",
+        message: "Player One! Select Your Warrior!",
+        choices: [...roster],
+      },
+    ])
+    .then((choice) => {
+      var P1 = choice.P1;
+      roster.forEach((el) => {
+        if (el.name === P1) {
+          P1 = el;
+          return;
+        }
+      });
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "P2",
+            message: "Player Two! Select Your Warrior!",
+            choices: [...roster],
+          },
+        ])
+        .then((choice) => {
+          var P2 = choice.P2;
+          roster.forEach((el) => {
+            if (el.name === P2) {
+              P2 = el;
+              return;
+            }
+          });
+          if (P1.name === P2.name) {
+            console.log("WOAH! A mirror match! @O@ How interesting!");
+          }
+          console.log(
+            `\nPlayer One has selected ${P1.name} as their Warrior!\n`
+          );
+          console.log(`Player Two selected ${P2.name} as their Warrior!\n`);
+          battle(P1, P2, 2);
         });
     });
 };
@@ -94,7 +142,6 @@ async function battle(P1, P2, playerNum) {
             P1.attack(P2, P1.heavyAttack);
           }
         }
-
         if (P2.isAlive() === true && p2Move > 8) {
           P2.nextMove(P1, p2Move);
         }
@@ -102,7 +149,7 @@ async function battle(P1, P2, playerNum) {
     if (P1.isAlive() && P2.isAlive()) {
       battle(P1, P2, 1);
     } else {
-      reset();
+      reset(roster);
       console.log("\nThe battle is over!\n");
       inquirer
         .prompt([
@@ -261,78 +308,6 @@ async function battle(P1, P2, playerNum) {
   }
 }
 
-function twoPlayer() {
-  inquirer
-    .prompt([
-      {
-        type: "list",
-        name: "P1",
-        message: "Player One! Select Your Warrior!",
-        choices: [...roster],
-      },
-    ])
-    .then((choice) => {
-      var P1 = choice.P1;
-      roster.forEach((el) => {
-        if (el.name === P1) {
-          P1 = el;
-          return;
-        }
-      });
-      inquirer
-        .prompt([
-          {
-            type: "list",
-            name: "P2",
-            message: "Player Two! Select Your Warrior!",
-            choices: [...roster],
-          },
-        ])
-        .then((choice) => {
-          var P2 = choice.P2;
-          roster.forEach((el) => {
-            if (el.name === P2) {
-              P2 = el;
-              return;
-            }
-          });
-          if (P1.name === P2.name) {
-            console.log("WOAH! A mirror match! @O@ How interesting!");
-          }
-          console.log(
-            `\nPlayer One has selected ${P1.name} as their Warrior!\n`
-          );
-          console.log(`Player Two selected ${P2.name} as their Warrior!\n`);
-          battle(P1, P2, 2);
-        });
-    });
-}
-
-const testMove = (warrior) => {
-  var testing = warrior.totalGuard();
-  testing;
-};
-
-const reset = () => {
-  roster.forEach((element) => {
-    if (element.remainingPG === 0) {
-      element.remainingPG = 1;
-    }
-    if (element.name === "Guts") {
-      element.hitpoints = 100;
-    }
-    if (element.name === "Vincent") {
-      element.hitpoints = 70;
-    }
-    if (element.name === "Musashi") {
-      element.hitpoints = 60;
-    }
-    if (element.name === "Clint") {
-      element.hitpoints = 75;
-    }
-  });
-};
-
 const mainmenu = () => {
   inquirer
     .prompt([
@@ -353,7 +328,7 @@ const mainmenu = () => {
       switch (choice.menuchoice) {
         case "Single-Player":
           singlePlayer();
-          // testMove(berserker);
+
           break;
         case "Two-Player":
           twoPlayer();

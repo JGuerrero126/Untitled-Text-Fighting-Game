@@ -1,4 +1,4 @@
-import mainmenu from "./index.js";
+import mainmenu from "../index.js";
 
 export async function rules() {
   await console.log("These are the rules for Warriors Of Wrath");
