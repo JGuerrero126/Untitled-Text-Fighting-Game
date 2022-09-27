@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import inquirer from "inquirer";
 import { Warrior } from "./util_files/Warrior.js";
 import { rules } from "./util_files/Rules.js";
