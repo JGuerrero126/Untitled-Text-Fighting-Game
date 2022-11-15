@@ -10,6 +10,7 @@ export function Warrior(
   this.type = type;
   this.defense = defense;
   this.hitpoints = hitpoints;
+  this.totalHP = hitpoints;
   this.basicAttack = basicAttack;
   this.heavyAttack = heavyAttack;
   this.guarding = false;
@@ -96,8 +97,6 @@ Warrior.prototype.isAlive = function () {
 };
 
 Warrior.prototype.nextMove = function (character2, move) {
-  // const move = Math.floor(Math.random() * 21);
-  // console.log(move);
   if (move <= 4) {
     return this.guard();
   }
@@ -110,4 +109,9 @@ Warrior.prototype.nextMove = function (character2, move) {
   if (move > 14) {
     return this.attack(character2, this.heavyAttack);
   }
+};
+
+Warrior.prototype.endStalemate = function (character2) {
+  this.guarding = false;
+  character2.guarding = false;
 };

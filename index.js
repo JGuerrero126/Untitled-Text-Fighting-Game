@@ -151,7 +151,7 @@ async function battle(P1, P2, playerNum) {
     if (P1.isAlive() && P2.isAlive()) {
       battle(P1, P2, 1);
     } else {
-      reset(roster);
+      reset(P1, P2);
       console.log("\nThe battle is over!\n");
       inquirer
         .prompt([
@@ -209,6 +209,7 @@ async function battle(P1, P2, playerNum) {
               console.log(
                 `${P1.name} and ${P2.name} both guard, the battle is at a standstill!`
               );
+              P1.endStalemate(P2);
             } else if (
               (firstChoice.playerOneMove === "Basic Attack" ||
                 firstChoice.playerOneMove === "Heavy Attack") &&
@@ -280,7 +281,7 @@ async function battle(P1, P2, playerNum) {
     if (P1.isAlive() && P2.isAlive()) {
       battle(P1, P2, 2);
     } else {
-      reset();
+      reset(P1, P2);
       console.log("\nThe battle is over!\n");
       inquirer
         .prompt([

@@ -34,8 +34,18 @@ Vincent AKA V, is a one of a kind tech-enhanced Warrior. He uses his chromed-out
 
 ### Musashi
 
-Musashi is one of the most legendary Samurai in all of history. Having honed his instincts throug countless battles, he boasts a significantly higher defense than any other Warrior, allowing him to guard against all Basic Attacks and even take away most of the damage from Heavy Attacks.
+Musashi is one of the most legendary Samurai in all of history. Having honed his instincts through countless battles, he boasts a significantly higher defense than any other Warrior, allowing him to guard against all Basic Attacks and even take away most of the damage from Heavy Attacks.
 
 ### Clint
 
-Clint is a legendary Gunslinger. Equipped with hidden armor and his six-shooters, he boasts a slightly higher than average Healthpool and Heavy Attack allowing him to deal significant damage if no guarded against.
+Clint is a legendary Gunslinger. Equipped with hidden armor and his six-shooters, he boasts a slightly higher than average Healthpool and Heavy Attack allowing him to deal significant damage if not guarded against.
+
+## Patch Notes 1.2.1
+
+### Bug Fixes
+
+-Fixed a bug that caused a game-breaking error if both players guarded in two-player mode.
+
+### Improvements
+
+-Streamlined various parts of the code as well as minor grammar fixes in the README.
