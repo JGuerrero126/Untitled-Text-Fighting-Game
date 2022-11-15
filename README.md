@@ -40,7 +40,7 @@ Musashi is one of the most legendary Samurai in all of history. Having honed his
 
 Clint is a legendary Gunslinger. Equipped with hidden armor and his six-shooters, he boasts a slightly higher than average Healthpool and Heavy Attack allowing him to deal significant damage if not guarded against.
 
-## Patch Notes 1.2.2
+## Patch Notes 1.2.3
 
 ### Bug Fixes
 
