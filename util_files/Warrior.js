@@ -4,7 +4,8 @@ export function Warrior(
   defense,
   hitpoints,
   basicAttack,
-  heavyAttack
+  heavyAttack,
+  stamina
 ) {
   this.name = name;
   this.type = type;
@@ -16,16 +17,25 @@ export function Warrior(
   this.guarding = false;
   this.perfectGuard = false;
   this.remainingPG = 1;
+  this.stamina = stamina;
+  this.totalStamina = stamina;
 }
+
+// A quick stamina usage guide: THIS ARE THE INITIAL VALUES, IT IS POSSIBLE THEY HAVE CHANGED
+//
+// Guard uses 5 Stamina;
+// Total Guard uses 8 Stamina;
+// Basic Attack uses 15 Stamina;
+// Heavy Attack uses 30 Stamina;
 
 Warrior.prototype.statSheet = function () {
   console.log(
-    `Name: ${this.name}\nType: ${this.type}\nDefense: ${this.defense}\nHitPoints: ${this.hitpoints}\nBasic Attack: ${this.basicAttack}\nHeavy Attack: ${this.heavyAttack}`
+    `Name: ${this.name}\nType: ${this.type}\nDefense: ${this.defense}\nHitPoints: ${this.hitpoints}\nBasic Attack: ${this.basicAttack}\nHeavy Attack: ${this.heavyAttack}\n Stamina: ${this.stamina}`
   );
   console.log("\n-------------\n");
 };
 
-Warrior.prototype.attack = function (character2, damage) {
+Warrior.prototype.attack = function (character2, damage, type) {
   if (character2.guarding === true || character2.perfectGuard === true) {
     if (character2.guarding === true) {
       if (damage - character2.defense > 0) {
@@ -40,11 +50,13 @@ Warrior.prototype.attack = function (character2, damage) {
         );
         character2.guarding = false;
         character2.hitpoints -= damage - character2.defense;
+        type === "Basic" ? (this.stamina -= 15) : (this.stamina -= 30);
       } else {
         console.log(
           `${this.name} attacks ${character2.name} for ${damage} points of damage!\nHowever, ${character2.name} defenses were so strong all damage was negated!\n`
         );
         character2.guarding = false;
+        type === "Basic" ? (this.stamina -= 15) : (this.stamina -= 30);
       }
     }
     if (character2.perfectGuard === true) {
@@ -53,16 +65,18 @@ Warrior.prototype.attack = function (character2, damage) {
       );
       character2.perfectGuard = false;
       character2.remainingPG--;
+      type === "Basic" ? (this.stamina -= 15) : (this.stamina -= 30);
     }
   } else {
     console.log(
       `${this.name} attacks ${character2.name} for ${damage} points of damage!\n`
     );
     character2.hitpoints -= damage;
+    type === "Basic" ? (this.stamina -= 15) : (this.stamina -= 30);
   }
   if (character2.isAlive()) {
     console.log(
-      `${character2.name} has ${character2.hitpoints} health remaining!\n`
+      `${character2.name} has ${character2.hitpoints} health and ${character2.stamina} stamina remaining!\n`
     );
   } else {
     console.log(
@@ -72,16 +86,32 @@ Warrior.prototype.attack = function (character2, damage) {
 };
 
 Warrior.prototype.guard = function () {
-  this.guarding = true;
-  console.log(`${this.name} is now guarding!\n`);
+  if (this.staminaCheck("Guard")) {
+    this.guarding = true;
+    this.stamina -= 5;
+    console.log(`${this.name} is now guarding!\n`);
+  } else {
+    this.guarding = true;
+    this.stamina -= 5;
+    console.log(`${this.name} guards with the last of their strength!\n`);
+  }
 };
 
 Warrior.prototype.totalGuard = function () {
   if (this.remainingPG > 0) {
-    console.log(
-      `${this.name} is giving all their might to defend themselves!\n`
-    );
-    this.perfectGuard = true;
+    if (this.staminaCheck("Total Guard")) {
+      console.log(
+        `${this.name} is giving all their might to defend themselves!\n`
+      );
+      this.perfectGuard = true;
+      this.stamina -= 8;
+    } else {
+      console.log(
+        `${this.name} is using their last bit of strength to defend themselves!\n`
+      );
+      this.perfectGuard = true;
+      this.stamina -= 8;
+    }
   } else {
     console.log(
       `${this.name} tried to perfectly defend, but they were too tired.\n`
@@ -114,4 +144,25 @@ Warrior.prototype.nextMove = function (character2, move) {
 Warrior.prototype.endStalemate = function (character2) {
   this.guarding = false;
   character2.guarding = false;
+  this.perfectGuard = false;
+  character2.perfectGuard = false;
+};
+
+Warrior.prototype.staminaCheck = function (move) {
+  if (move === "Guard") {
+    return this.stamina - 5 >= 0 ? true : false;
+  }
+  if (move === "Total Guard") {
+    return this.stamina - 8 >= 0 ? true : false;
+  }
+  if (move === "Basic Attack") {
+    return this.stamina - 15 >= 0 ? true : false;
+  }
+  if (move === "Heavy Attack") {
+    return this.stamina - 30 >= 0 ? true : false;
+  }
+};
+
+Warrior.prototype.hasStamina = function () {
+  return this.stamina > 0 ? true : false;
 };

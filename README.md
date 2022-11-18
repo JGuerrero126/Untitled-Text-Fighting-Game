@@ -40,12 +40,14 @@ Musashi is one of the most legendary Samurai in all of history. Having honed his
 
 Clint is a legendary Gunslinger. Equipped with hidden armor and his six-shooters, he boasts a slightly higher than average Healthpool and Heavy Attack allowing him to deal significant damage if not guarded against.
 
-## Patch Notes 1.2.3
+## Contact
 
-### Bug Fixes
+This has been getting a surprising amount of downloads so I thought I would add some contact information for myself if any of you wanted to reach out! Please feel free to send me an email with any comments, concerns or suggestions! Why did you download the game? What do you think of it? I'd love to know and hear about it! Also make sure to follow me on Twitter so you can follow all the updates of my other projects.
 
--Fixed a bug that caused a game-breaking error if both players guarded in two-player mode.
+[My Email](mailto:jerrygdev126@gmail.com)
 
-### Improvements
+[My Twitter](https://twitter.com/DevJerry126)
 
--Streamlined various parts of the code as well as minor grammar fixes in the README.
+## Patch Notes 1.3.0
+
+### The STAMINA Update!

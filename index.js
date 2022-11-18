@@ -1,18 +1,24 @@
 #!/usr/bin/env node
 
+// Gonna start adding comments to all the code.
+// Here we import all the required files in order for the game to function.
+// First up with need inquirer so that way we can communicate with and get input from the user.
 import inquirer from "inquirer";
+// We then import the Warrior file which contains the warrior class as well as all the function contained therein. This is the base of the entire game. We also import helper functions to view the Rules, View the Roster's stats, and lastly to Reset the Warriors at the end of battle.
 import { Warrior } from "./util_files/Warrior.js";
 import { rules } from "./util_files/Rules.js";
 import { viewRoster } from "./util_files/ViewRoster.js";
 import { reset } from "./util_files/Reset.js";
 
-const berserker = new Warrior("Guts", "Berserker", 20, 100, 20, 65);
-
-const merc = new Warrior("Vincent", "Merc", 25, 70, 30, 55);
-
-const vagabond = new Warrior("Musashi", "Vagabond", 40, 60, 15, 55);
-
-const gunslinger = new Warrior("Clint", "Gunslinger", 10, 75, 20, 60);
+// Here we use the Warrior class we imported to build out our 4 warriors.
+// The Berserker aka Guts has massive damage potential but the least Stamina in the roster.
+const berserker = new Warrior("Guts", "Berserker", 20, 100, 20, 65, 75);
+// The Merc aka Vincent has a higher than average basic attack with lots of Stamina, allowing him to get much more damage in with not as much stamina usage.
+const merc = new Warrior("Vincent", "Merc", 25, 70, 30, 55, 90);
+// The Vagabond aka Musashi is defense focused with a significantly higher than average defense, allowing him to shrug off most attacks, however he has the lowest health pool making tactical usage of defending and attacking critical.
+const vagabond = new Warrior("Musashi", "Vagabond", 40, 60, 15, 55, 80);
+// The Gunslinger aka Clint
+const gunslinger = new Warrior("Clint", "Gunslinger", 10, 75, 20, 60, 80);
 
 const roster = [berserker, merc, vagabond, gunslinger];
 
