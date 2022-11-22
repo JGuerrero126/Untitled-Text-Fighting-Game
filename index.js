@@ -22,7 +22,7 @@ const gunslinger = new Warrior("Clint", "Gunslinger", 10, 75, 20, 60, 80);
 // We put the entire roster into an array so we can access them easily while also giving us a way to easily view all of them and make it easier for the battle function to use them.
 const roster = [berserker, merc, vagabond, gunslinger];
 
-// This is the function that starts multiplayer
+// This is the function that starts the singleplayer component of the game.
 const singlePlayer = () => {
   inquirer
     .prompt([
@@ -34,12 +34,8 @@ const singlePlayer = () => {
       },
     ])
     .then((choice) => {
-      var P1 = choice.P1;
-      roster.forEach((el) => {
-        if (el.name === P1) {
-          P1 = el;
-          return;
-        }
+      var P1 = roster.find((el) => {
+        return el.name === choice.P1;
       });
       inquirer
         .prompt([
@@ -51,12 +47,8 @@ const singlePlayer = () => {
           },
         ])
         .then((choice) => {
-          var P2 = choice.P2;
-          roster.forEach((el) => {
-            if (el.name === P2) {
-              P2 = el;
-              return;
-            }
+          var P2 = roster.find((el) => {
+            return el.name === choice.P2;
           });
           console.log(`\nYou selected ${P1.name} as your Warrior\n`);
           console.log(`${P2.name} is your opponent!\n`);
@@ -67,6 +59,7 @@ const singlePlayer = () => {
     });
 };
 
+// This is the function that starts the multiplayer component of the game.
 const twoPlayer = () => {
   inquirer
     .prompt([
@@ -78,12 +71,8 @@ const twoPlayer = () => {
       },
     ])
     .then((choice) => {
-      var P1 = choice.P1;
-      roster.forEach((el) => {
-        if (el.name === P1) {
-          P1 = el;
-          return;
-        }
+      var P1 = roster.find((el) => {
+        return el.name === choice.P1;
       });
       inquirer
         .prompt([
@@ -95,12 +84,8 @@ const twoPlayer = () => {
           },
         ])
         .then((choice) => {
-          var P2 = choice.P2;
-          roster.forEach((el) => {
-            if (el.name === P2) {
-              P2 = el;
-              return;
-            }
+          var P2 = roster.find((el) => {
+            return el.name === choice.P2;
           });
           if (P1.name === P2.name) {
             console.log("WOAH! A mirror match! @O@ How interesting!");

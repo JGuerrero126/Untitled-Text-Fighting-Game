@@ -1,3 +1,5 @@
+import { values } from "./Values.js";
+
 export function Warrior(
   name,
   type,
@@ -50,13 +52,17 @@ Warrior.prototype.attack = function (character2, damage, type) {
         );
         character2.guarding = false;
         character2.hitpoints -= damage - character2.defense;
-        type === "Basic" ? (this.stamina -= 15) : (this.stamina -= 30);
+        type === "Basic"
+          ? (this.stamina -= values.basicAttack)
+          : (this.stamina -= values.heavyAttack);
       } else {
         console.log(
           `${this.name} attacks ${character2.name} for ${damage} points of damage!\nHowever, ${character2.name} defenses were so strong all damage was negated!\n`
         );
         character2.guarding = false;
-        type === "Basic" ? (this.stamina -= 15) : (this.stamina -= 30);
+        type === "Basic"
+          ? (this.stamina -= values.basicAttack)
+          : (this.stamina -= values.heavyAttack);
       }
     }
     if (character2.perfectGuard === true) {
@@ -65,14 +71,18 @@ Warrior.prototype.attack = function (character2, damage, type) {
       );
       character2.perfectGuard = false;
       character2.remainingPG--;
-      type === "Basic" ? (this.stamina -= 15) : (this.stamina -= 30);
+      type === "Basic"
+        ? (this.stamina -= values.basicAttack)
+        : (this.stamina -= values.heavyAttack);
     }
   } else {
     console.log(
       `${this.name} attacks ${character2.name} for ${damage} points of damage!\n`
     );
     character2.hitpoints -= damage;
-    type === "Basic" ? (this.stamina -= 15) : (this.stamina -= 30);
+    type === "Basic"
+      ? (this.stamina -= values.basicAttack)
+      : (this.stamina -= values.heavyAttack);
   }
   if (character2.isAlive()) {
     console.log(
@@ -88,11 +98,11 @@ Warrior.prototype.attack = function (character2, damage, type) {
 Warrior.prototype.guard = function () {
   if (this.staminaCheck("Guard")) {
     this.guarding = true;
-    this.stamina -= 5;
+    this.stamina -= values.guard;
     console.log(`${this.name} is now guarding!\n`);
   } else {
     this.guarding = true;
-    this.stamina -= 5;
+    this.stamina -= values.guard;
     console.log(`${this.name} guards with the last of their strength!\n`);
   }
 };
@@ -104,13 +114,13 @@ Warrior.prototype.totalGuard = function () {
         `${this.name} is giving all their might to defend themselves!\n`
       );
       this.perfectGuard = true;
-      this.stamina -= 8;
+      this.stamina -= values.totalGuard;
     } else {
       console.log(
         `${this.name} is using their last bit of strength to defend themselves!\n`
       );
       this.perfectGuard = true;
-      this.stamina -= 8;
+      this.stamina -= values.totalGuard;
     }
   } else {
     console.log(
@@ -150,16 +160,16 @@ Warrior.prototype.endStalemate = function (character2) {
 
 Warrior.prototype.staminaCheck = function (move) {
   if (move === "Guard") {
-    return this.stamina - 5 >= 0 ? true : false;
+    return this.stamina - values.guard >= 0 ? true : false;
   }
   if (move === "Total Guard") {
-    return this.stamina - 8 >= 0 ? true : false;
+    return this.stamina - values.totalGuard >= 0 ? true : false;
   }
   if (move === "Basic Attack") {
-    return this.stamina - 15 >= 0 ? true : false;
+    return this.stamina - values.basicAttack >= 0 ? true : false;
   }
   if (move === "Heavy Attack") {
-    return this.stamina - 30 >= 0 ? true : false;
+    return this.stamina - values.heavyAttack >= 0 ? true : false;
   }
 };
 
