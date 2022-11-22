@@ -17,11 +17,12 @@ const berserker = new Warrior("Guts", "Berserker", 20, 100, 20, 65, 75);
 const merc = new Warrior("Vincent", "Merc", 25, 70, 30, 55, 90);
 // The Vagabond aka Musashi is defense focused with a significantly higher than average defense, allowing him to shrug off most attacks, however he has the lowest health pool making tactical usage of defending and attacking critical.
 const vagabond = new Warrior("Musashi", "Vagabond", 40, 60, 15, 55, 80);
-// The Gunslinger aka Clint
+// The Gunslinger aka Clint comes equipped with a higher then average HP and Heavy Attack. He can very quickly gun anyone down if not checked.
 const gunslinger = new Warrior("Clint", "Gunslinger", 10, 75, 20, 60, 80);
-
+// We put the entire roster into an array so we can access them easily while also giving us a way to easily view all of them and make it easier for the battle function to use them.
 const roster = [berserker, merc, vagabond, gunslinger];
 
+// This is the function that starts multiplayer
 const singlePlayer = () => {
   inquirer
     .prompt([
@@ -115,7 +116,6 @@ const twoPlayer = () => {
 
 async function battle(P1, P2, playerNum) {
   if (playerNum === 1) {
-    let p1Move = null;
     let p2Move = null;
     await inquirer
       .prompt([

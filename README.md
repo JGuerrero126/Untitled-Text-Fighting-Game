@@ -48,6 +48,6 @@ This has been getting a surprising amount of downloads so I thought I would add 
 
 [My Twitter](https://twitter.com/DevJerry126)
 
-## Patch Notes 1.3.0
+## Patch Notes
 
 ### The STAMINA Update!
