@@ -116,7 +116,18 @@ async function battle(P1, P2, playerNum) {
         if (p2Move <= 8) {
           P2.nextMove(P1, p2Move);
         }
-        if (choice.p1move === "Guard" || choice.p1move === "Total Guard") {
+        if (
+          (choice.p1move === "Guard" || choice.p1move === "Total Guard") &&
+          p2Move <= 8
+        ) {
+          console.log(
+            `${P1.name} and ${P2.name} both guard, the battle is at a standstill!`
+          );
+          P1.endStalemate(P2);
+        } else if (
+          (choice.p1move === "Guard" || choice.p1move === "Total Guard") &&
+          p2Move > 8
+        ) {
           if (choice.p1move === "Guard") {
             P1.guard();
           }
@@ -140,6 +151,7 @@ async function battle(P1, P2, playerNum) {
         }
       });
     if (P1.isAlive() && P2.isAlive()) {
+      P1.statusCheck(P2);
       battle(P1, P2, 1);
     } else {
       reset(P1, P2);
@@ -270,6 +282,7 @@ async function battle(P1, P2, playerNum) {
           });
       });
     if (P1.isAlive() && P2.isAlive()) {
+      P1.statusCheck(P2);
       battle(P1, P2, 2);
     } else {
       reset(P1, P2);

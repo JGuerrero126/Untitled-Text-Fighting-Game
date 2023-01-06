@@ -23,7 +23,9 @@ export function Warrior(
   this.totalStamina = stamina;
 }
 
-// A quick stamina usage guide: THIS ARE THE INITIAL VALUES, IT IS POSSIBLE THEY HAVE CHANGED
+// CURRENT GOAL: IMPLEMENT STAMINA BASED ENDING OF BATTLE
+
+// A quick stamina usage guide: THESE ARE THE INITIAL VALUES, IT IS POSSIBLE THEY HAVE CHANGED
 //
 // Guard uses 5 Stamina;
 // Total Guard uses 8 Stamina;
@@ -67,7 +69,7 @@ Warrior.prototype.attack = function (character2, damage, type) {
     }
     if (character2.perfectGuard === true) {
       console.log(
-        `${this.name} tried to attack ${character2.name}.\nBut ${character2.name} perfectly defend themselves! No damage taken!\n`
+        `${this.name} tried to attack ${character2.name}.\nBut ${character2.name} perfectly defended themselves! No damage taken!\n`
       );
       character2.perfectGuard = false;
       character2.remainingPG--;
@@ -83,15 +85,6 @@ Warrior.prototype.attack = function (character2, damage, type) {
     type === "Basic"
       ? (this.stamina -= values.basicAttack)
       : (this.stamina -= values.heavyAttack);
-  }
-  if (character2.isAlive()) {
-    console.log(
-      `${character2.name} has ${character2.hitpoints} health and ${character2.stamina} stamina remaining!\n`
-    );
-  } else {
-    console.log(
-      `That attack killed ${character2.name}! Game Over!\n${this.name} is the victor!\n`
-    );
   }
 };
 
@@ -175,4 +168,10 @@ Warrior.prototype.staminaCheck = function (move) {
 
 Warrior.prototype.hasStamina = function () {
   return this.stamina > 0 ? true : false;
+};
+
+Warrior.prototype.statusCheck = function (character2) {
+  console.log(
+    `${this.name} has ${this.stamina} Stamina and ${this.hitpoints} HP remaining, while ${character2.name} has ${character2.stamina} Stamina and ${character2.hitpoints} HP remaining`
+  );
 };
