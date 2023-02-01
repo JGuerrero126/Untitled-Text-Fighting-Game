@@ -1,21 +1,28 @@
 #!/usr/bin/env node
 
+// Gonna start adding comments to all the code.
+// Here we import all the required files in order for the game to function.
+// First up with need inquirer so that way we can communicate with and get input from the user.
 import inquirer from "inquirer";
+// We then import the Warrior file which contains the warrior class as well as all the function contained therein. This is the base of the entire game. We also import helper functions to view the Rules, View the Roster's stats, and lastly to Reset the Warriors at the end of battle.
 import { Warrior } from "./util_files/Warrior.js";
 import { rules } from "./util_files/Rules.js";
 import { viewRoster } from "./util_files/ViewRoster.js";
 import { reset } from "./util_files/Reset.js";
 
-const berserker = new Warrior("Guts", "Berserker", 20, 100, 20, 65);
-
-const merc = new Warrior("Vincent", "Merc", 25, 70, 30, 55);
-
-const vagabond = new Warrior("Musashi", "Vagabond", 40, 60, 15, 55);
-
-const gunslinger = new Warrior("Clint", "Gunslinger", 10, 75, 20, 60);
-
+// Here we use the Warrior class we imported to build out our 4 warriors.
+// The Berserker aka Guts has massive damage potential but the least Stamina in the roster.
+const berserker = new Warrior("Guts", "Berserker", 20, 100, 20, 65, 75);
+// The Merc aka Vincent has a higher than average basic attack with lots of Stamina, allowing him to get much more damage in with not as much stamina usage.
+const merc = new Warrior("Vincent", "Merc", 25, 70, 30, 55, 90);
+// The Vagabond aka Musashi is defense focused with a significantly higher than average defense, allowing him to shrug off most attacks, however he has the lowest health pool making tactical usage of defending and attacking critical.
+const vagabond = new Warrior("Musashi", "Vagabond", 40, 60, 15, 55, 80);
+// The Gunslinger aka Clint comes equipped with a higher then average HP and Heavy Attack. He can very quickly gun anyone down if not checked.
+const gunslinger = new Warrior("Clint", "Gunslinger", 10, 75, 20, 60, 80);
+// We put the entire roster into an array so we can access them easily while also giving us a way to easily view all of them and make it easier for the battle function to use them.
 const roster = [berserker, merc, vagabond, gunslinger];
 
+// This is the function that starts the singleplayer component of the game.
 const singlePlayer = () => {
   inquirer
     .prompt([
@@ -27,12 +34,8 @@ const singlePlayer = () => {
       },
     ])
     .then((choice) => {
-      var P1 = choice.P1;
-      roster.forEach((el) => {
-        if (el.name === P1) {
-          P1 = el;
-          return;
-        }
+      var P1 = roster.find((el) => {
+        return el.name === choice.P1;
       });
       inquirer
         .prompt([
@@ -44,12 +47,8 @@ const singlePlayer = () => {
           },
         ])
         .then((choice) => {
-          var P2 = choice.P2;
-          roster.forEach((el) => {
-            if (el.name === P2) {
-              P2 = el;
-              return;
-            }
+          var P2 = roster.find((el) => {
+            return el.name === choice.P2;
           });
           console.log(`\nYou selected ${P1.name} as your Warrior\n`);
           console.log(`${P2.name} is your opponent!\n`);
@@ -60,6 +59,7 @@ const singlePlayer = () => {
     });
 };
 
+// This is the function that starts the multiplayer component of the game.
 const twoPlayer = () => {
   inquirer
     .prompt([
@@ -71,12 +71,8 @@ const twoPlayer = () => {
       },
     ])
     .then((choice) => {
-      var P1 = choice.P1;
-      roster.forEach((el) => {
-        if (el.name === P1) {
-          P1 = el;
-          return;
-        }
+      var P1 = roster.find((el) => {
+        return el.name === choice.P1;
       });
       inquirer
         .prompt([
@@ -88,12 +84,8 @@ const twoPlayer = () => {
           },
         ])
         .then((choice) => {
-          var P2 = choice.P2;
-          roster.forEach((el) => {
-            if (el.name === P2) {
-              P2 = el;
-              return;
-            }
+          var P2 = roster.find((el) => {
+            return el.name === choice.P2;
           });
           if (P1.name === P2.name) {
             console.log("WOAH! A mirror match! @O@ How interesting!");
@@ -109,7 +101,6 @@ const twoPlayer = () => {
 
 async function battle(P1, P2, playerNum) {
   if (playerNum === 1) {
-    let p1Move = null;
     let p2Move = null;
     await inquirer
       .prompt([
@@ -125,7 +116,18 @@ async function battle(P1, P2, playerNum) {
         if (p2Move <= 8) {
           P2.nextMove(P1, p2Move);
         }
-        if (choice.p1move === "Guard" || choice.p1move === "Total Guard") {
+        if (
+          (choice.p1move === "Guard" || choice.p1move === "Total Guard") &&
+          p2Move <= 8
+        ) {
+          console.log(
+            `${P1.name} and ${P2.name} both guard, the battle is at a standstill!`
+          );
+          P1.endStalemate(P2);
+        } else if (
+          (choice.p1move === "Guard" || choice.p1move === "Total Guard") &&
+          p2Move > 8
+        ) {
           if (choice.p1move === "Guard") {
             P1.guard();
           }
@@ -148,8 +150,158 @@ async function battle(P1, P2, playerNum) {
           P2.nextMove(P1, p2Move);
         }
       });
-    if (P1.isAlive() && P2.isAlive()) {
+    if (P1.isAlive() && P2.isAlive() && P1.hasStamina() && P2.hasStamina()) {
+      P1.statusCheck(P2);
       battle(P1, P2, 1);
+    } else if (!P1.isAlive() || !P2.isAlive()) {
+      reset(P1, P2);
+      console.log("\nThe battle is over!\n");
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "menuchoice",
+            message: "What would you like to do now!",
+            choices: ["Rematch", "Main Menu"],
+          },
+        ])
+        .then((choice) => {
+          switch (choice.menuchoice) {
+            case "Rematch":
+              battle(P1, P2, 1);
+              break;
+            case "Main Menu":
+              mainmenu();
+              break;
+            default:
+              console.log(
+                "I'm sorry I didn't understand your choice, please start over."
+              );
+              mainmenu();
+          }
+        });
+    } else if (!P1.hasStamina() && !P2.hasStamina()) {
+      // Here the battle ends in a stalemate
+      console.log(
+        "\nThe Two Warriors fell into a stalemate.\nBoth of them too tired to keep fighting.\nThe battle is over.\n"
+      );
+      reset(P1, P2);
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "menuchoice",
+            message: "What would you like to do now!",
+            choices: ["Rematch", "Main Menu"],
+          },
+        ])
+        .then((choice) => {
+          switch (choice.menuchoice) {
+            case "Rematch":
+              battle(P1, P2, 1);
+              break;
+            case "Main Menu":
+              mainmenu();
+              break;
+            default:
+              console.log(
+                "I'm sorry I didn't understand your choice, please start over."
+              );
+              mainmenu();
+          }
+        });
+    } else if (!P1.hasStamina()) {
+      // Here the battle ends with P1 losing and being at the mercy of P2
+      // P2 is offered the choice to Spare or Kill P1
+      console.log(
+        `\n${P1.name} falls to their knees exhausted.\n Completely at the mercy of ${P2.name}.\n`
+      );
+      if (Math.floor(Math.random() * 20) >= 10) {
+        console.log(
+          `\n${P2.name} puts their weapons away before turning away to leave.\n${P1.name} is left alive.\nThe battle is over.\n`
+        );
+      } else {
+        console.log(
+          `\n${P2.name} makes quick work of their exhausted foe.\n${P1.name} is given no mercy.\nThe battle is over.\n`
+        );
+      }
+      reset(P1, P2);
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "menuchoice",
+            message: "What would you like to do now!",
+            choices: ["Rematch", "Main Menu"],
+          },
+        ])
+        .then((choice) => {
+          switch (choice.menuchoice) {
+            case "Rematch":
+              battle(P1, P2, 1);
+              break;
+            case "Main Menu":
+              mainmenu();
+              break;
+            default:
+              console.log(
+                "I'm sorry I didn't understand your choice, please start over."
+              );
+              mainmenu();
+          }
+        });
+    } else if (!P2.hasStamina()) {
+      // Here the battle ends with P2 losing and being at the mercy of P1
+      // P1 is offered the choice to Spare or Kill P2
+      console.log(
+        `\n${P2.name} falls to their knees exhausted.\nCompletely at the mercy of ${P1.name}.\n`
+      );
+      await inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "endchoice",
+            message:
+              "Your opponent is at your mercy, will you Slaughter them? Or perhaps show them mercy?",
+            choices: ["Spare", "Kill"],
+          },
+        ])
+        .then((choice) => {
+          if (choice.endchoice === "Spare") {
+            console.log(
+              `\n${P1.name} puts their weapons away before turning away to leave.\n${P2.name} is thankful for their mercy.\nThe battle is over.\n`
+            );
+          } else {
+            console.log(
+              `\n${P1.name} makes quick work of their exhausted foe.\n${P2.name} is slaughtered.\nThe battle is over.\n`
+            );
+          }
+        });
+      reset(P1, P2);
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "menuchoice",
+            message: "What would you like to do now!",
+            choices: ["Rematch", "Main Menu"],
+          },
+        ])
+        .then((choice) => {
+          switch (choice.menuchoice) {
+            case "Rematch":
+              battle(P1, P2, 1);
+              break;
+            case "Main Menu":
+              mainmenu();
+              break;
+            default:
+              console.log(
+                "I'm sorry I didn't understand your choice, please start over."
+              );
+              mainmenu();
+          }
+        });
     } else {
       reset(P1, P2);
       console.log("\nThe battle is over!\n");
@@ -279,7 +431,173 @@ async function battle(P1, P2, playerNum) {
           });
       });
     if (P1.isAlive() && P2.isAlive()) {
+      P1.statusCheck(P2);
       battle(P1, P2, 2);
+    } else if (!P1.isAlive() || !P2.isAlive()) {
+      if (P1.isAlive()) {
+        console.log(`\nThe battle ends with ${P1.name} as the Victor.\n`);
+      } else {
+        console.log(`\nThe battle ends with ${P2.name} as the Victor.\n`);
+      }
+      reset(P1, P2);
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "menuchoice",
+            message: "What would you like to do now!",
+            choices: ["Rematch", "Main Menu"],
+          },
+        ])
+        .then((choice) => {
+          switch (choice.menuchoice) {
+            case "Rematch":
+              battle(P1, P2, 1);
+              break;
+            case "Main Menu":
+              mainmenu();
+              break;
+            default:
+              console.log(
+                "I'm sorry I didn't understand your choice, please start over."
+              );
+              mainmenu();
+          }
+        });
+    } else if (!P1.hasStamina() && !P2.hasStamina()) {
+      // Here the battle ends in a stalemate
+      console.log(
+        "\nThe Two Warriors fell into a stalemate.\nBoth of them too tired to keep fighting.\nThe battle is over.\n"
+      );
+      reset(P1, P2);
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "menuchoice",
+            message: "What would you like to do now!",
+            choices: ["Rematch", "Main Menu"],
+          },
+        ])
+        .then((choice) => {
+          switch (choice.menuchoice) {
+            case "Rematch":
+              battle(P1, P2, 1);
+              break;
+            case "Main Menu":
+              mainmenu();
+              break;
+            default:
+              console.log(
+                "I'm sorry I didn't understand your choice, please start over."
+              );
+              mainmenu();
+          }
+        });
+    } else if (!P1.hasStamina()) {
+      // Here the battle ends with P1 losing and being at the mercy of P2
+      // P2 is offered the choice to Spare or Kill P1
+      console.log(
+        `\n${P1.name} falls to their knees exhausted.\nCompletely at the mercy of ${P2.name}.\n`
+      );
+      await inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "endchoice",
+            message:
+              "Your opponent is at your mercy, will you Slaughter them? Or perhaps show them mercy?",
+            choices: ["Spare", "Kill"],
+          },
+        ])
+        .then((choice) => {
+          if (choice.endchoice === "Spare") {
+            console.log(
+              `\n${P2.name} puts their weapons away before turning away to leave.\n${P1.name} is thankful for their mercy.\nThe battle is over.\n`
+            );
+          } else {
+            console.log(
+              `\n${P2.name} makes quick work of their exhausted foe.\n${P1.name} is slaughtered.\nThe battle is over.\n`
+            );
+          }
+        });
+      reset(P1, P2);
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "menuchoice",
+            message: "What would you like to do now!",
+            choices: ["Rematch", "Main Menu"],
+          },
+        ])
+        .then((choice) => {
+          switch (choice.menuchoice) {
+            case "Rematch":
+              battle(P1, P2, 1);
+              break;
+            case "Main Menu":
+              mainmenu();
+              break;
+            default:
+              console.log(
+                "I'm sorry I didn't understand your choice, please start over."
+              );
+              mainmenu();
+          }
+        });
+    } else if (!P2.hasStamina()) {
+      // Here the battle ends with P2 losing and being at the mercy of P1
+      // P1 is offered the choice to Spare or Kill P2
+      console.log(
+        `\n${P2.name} falls to their knees exhausted.\nCompletely at the mercy of ${P1.name}.\n`
+      );
+      await inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "endchoice",
+            message:
+              "Your opponent is at your mercy, will you Slaughter them? Or perhaps show them mercy?",
+            choices: ["Spare", "Kill"],
+          },
+        ])
+        .then((choice) => {
+          if (choice.endchoice === "Spare") {
+            console.log(
+              `\n${P1.name} puts their weapons away before turning away to leave.\n${P2.name} is thankful for their mercy.\nThe battle is over.\n`
+            );
+          } else {
+            console.log(
+              `\n${P1.name} makes quick work of their exhausted foe.\n${P2.name} is slaughtered.\nThe battle is over.\n`
+            );
+          }
+        });
+      reset(P1, P2);
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "menuchoice",
+            message: "What would you like to do now!",
+            choices: ["Rematch", "Main Menu"],
+          },
+        ])
+        .then((choice) => {
+          switch (choice.menuchoice) {
+            case "Rematch":
+              battle(P1, P2, 1);
+              break;
+            case "Main Menu":
+              mainmenu();
+              break;
+            default:
+              console.log(
+                "I'm sorry I didn't understand your choice, please start over."
+              );
+              mainmenu();
+          }
+        });
     } else {
       reset(P1, P2);
       console.log("\nThe battle is over!\n");
