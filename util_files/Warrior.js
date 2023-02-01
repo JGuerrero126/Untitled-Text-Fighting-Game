@@ -23,7 +23,7 @@ export function Warrior(
   this.totalStamina = stamina;
 }
 
-// CURRENT GOAL: IMPLEMENT STAMINA BASED ENDING OF BATTLE
+// CURRENT GOAL: ADD PATCH NOTES
 
 // A quick stamina usage guide: THESE ARE THE INITIAL VALUES, IT IS POSSIBLE THEY HAVE CHANGED
 //

@@ -51,3 +51,21 @@ This has been getting a surprising amount of downloads so I thought I would add 
 ## Patch Notes
 
 ### The STAMINA Update!
+
+Behold! A brand new feature! Introducing STAMINA, a new system of Warriors Of Wrath. Now in addition to your HP you now have a limited amount of stamina that is drained whenever you make a move. I added the feature to help reduce the possiblity of people wasting time in matches and to add another way for strategic players to flex their mental muscles! Here are some initial values (Keep note they are subject to change in a future patch):
+
+-Guarding takes 5 Stamina
+-Total Guarding uses up 8 Stamina
+-Basic Attacks will use 15 Stamina
+-Heavy Attacks take up a whopping 30 Stamina
+
+Be mindful of the new feature when getting into battles and make sure to watch that stamina!
+
+### Improvements
+
+-Added new ending for running out of stamina
+-Improved general code layout/Structure
+
+### Changes
+
+-Made a variety of minor changes to the way the game works and what is displayed when
